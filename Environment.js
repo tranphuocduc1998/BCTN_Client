@@ -1,0 +1,13 @@
+export const Environment = {
+    "localhost": '192.168.25.104:3030',
+    "type": "service_account",
+    "project_id": "api-ai-hnioee",
+    "private_key_id": "09f6e6d340f9820b0958282f70590187d51ce77c",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC9kKJI/zTxgqEj\nrviKxrcCjlo85dDLRaf5q+ZJjj1qtuOwK7Bdfbs0iMrFcn71v+8cstPxiEnbxwbT\ne3tOyXgBSVTSF/dVWORieKrM+fAeiiWjEC5kPgWtUSOqxMdTCOU8acenUBPutYby\n8MX7PlXuvBhJ8OHUnBHEj3xfAPrm2NIvA2dScXov322mZ4nLIHL0hEOUcrJ0abtP\nwq1Ej3NyM3XNpkDE0X9xX/EDqPogrYHE07i/rfAwuXfG/mMIKEsHe+YDXt1hJ5j9\n8dMuCFkSsVnOTA5L1tide5fkKRZqfTWPTNNPmrI4W2h3QYgnWINtnhpQ8gBebdDS\ng6nwyHj7AgMBAAECggEAN4IfKz3jzGaCdfb523U1yL9TaCqpeaRjfAYckGRg0ptM\nT91zLuUuyMLXkXql96MkyuQIkNzmN79vXcT2RgtToxjMiBqxd6Hoenc4GH6FlAPC\n4p1N4FeTBP3R8mLdtRBRQ9/7sSAPPiKUqhXb+2Z09kvI1vn8vuuWfla/xff9AFRz\nG32KaSy23vki5wGJPItsQFRYRyHCBv+v9xnrM9MJmsXoPtvi8+Vs/1YrqKPOr03X\n3LQTTHuvF2JdNQxcLVZ1p3vliT70t1zbYuhTrh9k/hZWJK87cz/brgr8hQVvd3mE\nHp6q/GX6qyM22aG35LoCUy5jAq5lnGYS1GASLkenRQKBgQDkNBg8fb3WW0DxWuwA\nZ6jvZiXqt3WdmGvbZdujpbjg9fA0zT5DjX7eUav5Tt51W6yM/+wVLtrZ7ifnEp8e\n9Jm/V1rFznHqhc5zxZB3iXkYxcNYNia8o0y+d0RDkllcwdWBNdrXLaFZkUzjkTQu\nt17HQ69b69CeEOahE+JjEM241wKBgQDUp7O/dHIdFNSsiyKHhsuogtQGH2M8j+5j\nMd3Gjq/eCeSDcboosZ/5yncarevlwYxem4ndp1e0dRgeBbfYxG+TvUnfU3lg7wfD\nBX4GOlbgBRAnRBlkKvJQjQSjBLbAxuB/fPPLXGxjlUT8ethIY8OdPUJjpH8PTfPW\nU+e5a5WIfQKBgQDBkirozORFurw4vp4nrcZP477P/XSoDI2Y2irYAo/zSsrJjzt8\ng76VCIQvAqaSuAOCyudQBKGhcHGqgVI2KNdtxcR6u6ZHf97itzfXHeZ5i+8qmSx8\noKxNd8+Q3cgtdUIMy0jpc4xE9IpbEmVIJ0UfE5vhBgO8wKtRARPsYmmOmwKBgQCk\n18LcXHXA2U7q2YfQqsrgO1oDzPzuC1xthFA4BI+LfPuocNYviVFLHokpIzzDgz8+\nby91pKy19DbXvvL+k3cyfP7woRJr855+rJk+VqbVTNdyuLU+EpR3oHjBrXvE/+Uy\nrjeFooVaxHEPjmJt6vfNwZjfCLp9sJ2dvLjZ4O2vOQKBgGKNtrXm+lwvhR1NHNGA\nHASG2btibwJkcEgEWH1ZWxiRhBFkjjq78b/PGClFnXL6o1VGJAgdgZiUEQnG625u\nlo/TsgV1GCwOnghLDqWXfcosqCsRctdxBk1cKSOg8so5fsS40bF2iF5OIxafSn8x\ngz3USxC9U7tVTVux9nRbFQiS\n-----END PRIVATE KEY-----\n",
+    "client_email": "dialogflow-brdctq@api-ai-hnioee.iam.gserviceaccount.com",
+    "client_id": "108526235819195280849",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-brdctq%40api-ai-hnioee.iam.gserviceaccount.com"
+}
