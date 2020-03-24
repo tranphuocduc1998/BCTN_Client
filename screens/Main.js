@@ -4,7 +4,7 @@ import Voice from '@react-native-community/voice';
 import * as Speech from 'expo-speech';
 
 import { sendHttpRequest } from '../constants/Fetch';
-import { Container, Footer } from '../components/Container';
+import { Container, Footer, FooterSound } from '../components/Container';
 import { color } from '../constants/Theme';
 
 const Main = () => {
@@ -39,16 +39,17 @@ const Main = () => {
     const onSpeechEnd = Voice.onSpeechEnd = (e) => {
         setSpeech(false);
         console.log(valueText);
-        sendHttpRequest('POST', 'http://192.168.25.104:3030/ai/request', { query: valueText })
-            .then(resJson => {
-                const { result } = resJson
-                setValueAI(result)
-                Speech.speak(result);
-            });
+        // sendHttpRequest('POST', 'http://192.168.25.104:3030/ai/request', { query: valueText })
+        //     .then(resJson => {
+        //         const { result } = resJson
+        //         setValueAI(result)
+        //         Speech.speak(result);
+        //     });
     };
 
     const _startRecognizing = async () => {
         setSpeech(true);
+        setValueText('');
         try {
             await Voice.start('vi-VN');
         } catch (e) {
@@ -67,7 +68,7 @@ const Main = () => {
     let contentSpeech = <Footer onPress={_startRecognizing} color={color.accent} />
 
     if (speech) {
-        contentSpeech = <Footer onPress={_stopRecognizing} color={'red'} />
+        contentSpeech = <FooterSound />
     }
 
 

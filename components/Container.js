@@ -25,10 +25,18 @@ export function Footer({ disabled, onPress, color }) {
                     borderRadius: 50,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: 20,
+                    padding: 10,
                 }} onPress={onPress}>
                 <Icon name='keyboard-voice' type='MaterialIcons' size={25} color={color} />
             </TouchableOpacity>
         </View>
     );
+}
+
+export function FooterSound() {
+    return (
+        <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 5 }}>
+            <Icon name='sound' type='Foundation' size={35} color={'red'} />
+        </View>
+    )
 }
