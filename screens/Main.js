@@ -6,11 +6,35 @@ import * as Speech from 'expo-speech';
 import { sendHttpRequest } from '../constants/Fetch';
 import { Container, Footer, FooterSound } from '../components/Container';
 import { color } from '../constants/Theme';
+import { BasicCard } from '../components/Card';
 
 const Main = () => {
     const [valueText, setValueText] = useState('');
     const [speech, setSpeech] = useState(false);
-    const [valueAI, setValueAI] = useState('');
+    const [valueTextString, setValueTextString] = useState('');
+    const [valueBasicCard, setValueBasicCard] = useState([]);
+
+    useEffect(() => {
+        sendHttpRequest('GET', 'http://192.168.25.104:3030/ai')
+            .then(resJson => {
+                const { type, voice } = resJson;
+                switch (type) {
+                    case "basicCard":
+                        const { Data } = resJson;
+                        setValueTextString('');
+                        setValueBasicCard(Data);
+                        break;
+                    case "textString":
+                        setValueBasicCard([]);
+                        setValueTextString(voice);
+                        break;
+
+                    default:
+                        break;
+                }
+                Speech.speak(voice);
+            });
+    }, [])
 
     const onSpeechStart = Voice.onSpeechStart = (e) => {
 
@@ -38,18 +62,29 @@ const Main = () => {
 
     const onSpeechEnd = Voice.onSpeechEnd = (e) => {
         setSpeech(false);
-        console.log(valueText);
-        // sendHttpRequest('POST', 'http://192.168.25.104:3030/ai/request', { query: valueText })
-        //     .then(resJson => {
-        //         const { result } = resJson
-        //         setValueAI(result)
-        //         Speech.speak(result);
-        //     });
+        sendHttpRequest('POST', 'http://192.168.25.104:3030/ai/request', { query: valueText })
+            .then(resJson => {
+                const { type, voice } = resJson;
+                switch (type) {
+                    case "basicCard":
+                        const { basicCard } = resJson;
+                        setValueTextString('');
+                        setValueBasicCard(basicCard);
+                        break;
+                    case "textString":
+                        setValueBasicCard([]);
+                        setValueTextString(voice);
+                        break;
+
+                    default:
+                        break;
+                }
+                Speech.speak(voice);
+            });
     };
 
     const _startRecognizing = async () => {
         setSpeech(true);
-        setValueText('');
         try {
             await Voice.start('vi-VN');
         } catch (e) {
@@ -71,7 +106,6 @@ const Main = () => {
         contentSpeech = <FooterSound />
     }
 
-
     return (
         <Container>
             <View style={{
@@ -84,10 +118,34 @@ const Main = () => {
             }}>
                 <Text style={{ fontSize: 20, color: '#000' }}>{valueText}</Text>
             </View>
-            <ScrollView>
-                <Text style={{ fontSize: 20, color: '#000' }}>
-                    {valueAI}
-                </Text>
+            <ScrollView style={{ backgroundColor: color.backgrounddark }}>
+                {valueBasicCard.map(result => {
+                    return <BasicCard key={result._id}
+                        onPress={(query) => {
+                            sendHttpRequest('POST', 'http://192.168.25.104:3030/ai/request', { query: query })
+                                .then(resJson => {
+                                    const { type, voice } = resJson;
+                                    switch (type) {
+                                        case "basicCard":
+                                            const { basicCard } = resJson;
+                                            setValueTextString('');
+                                            setValueBasicCard(basicCard);
+                                            break;
+                                        case "textString":
+                                            const { textString } = resJson;
+                                            setValueBasicCard([]);
+                                            setValueTextString(textString);
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                    Speech.speak(voice);
+                                });
+                        }}
+                        data={result} />
+                })}
+                {valueTextString ? <View style={{ borderRadius: 20, marginLeft: 10, backgroundColor: '#fff', paddingHorizontal: 10 }}><Text style={{ fontSize: 20, color: '#000' }}> {valueTextString} </Text></View> : <View></View>}
             </ScrollView>
             {contentSpeech}
         </Container>

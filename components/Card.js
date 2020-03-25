@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 
-export function BasicCard({ children, onPress, data }) {
-    const { imageUri, title, formattedText, button } = data;
+export function BasicCard({ onPress, data }) {
+    const { title, formattedText, imageUri, titleButton, query } = data;
     return (
         <View style={{
             height: 300,
@@ -29,26 +29,18 @@ export function BasicCard({ children, onPress, data }) {
                             justifyContent: 'flex-end',
                         }}
                     >
-                        <View style={{
+                        {title || formattedText ? <View style={{
                             backgroundColor: 'rgba(0,0,0,0.6)',
                             paddingHorizontal: 12,
                             paddingVertical: 5,
                         }}>
-                            <Text style={{
-                                fontSize: 18,
-                                color: 'white',
-                                textAlign: 'left'
-                            }}>{title}</Text>
-                            <Text style={{
-                                fontSize: 18,
-                                color: 'white',
-                                textAlign: 'left'
-                            }}>{formattedText}</Text>
-                        </View>
+                            {title ? <Text style={{ fontSize: 18, color: 'white', textAlign: 'left' }}>{title}</Text> : <View></View>}
+                            {formattedText ? <Text style={{ fontSize: 18, color: 'white', textAlign: 'left' }}>{formattedText}</Text> : <View></View>}
+                        </View> : <View></View>}
                     </ImageBackground>
                 </View>
-                <TouchableOpacity style={{ padding: 5 }} onPress={onPress.bind(this, title)}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>{button.title}</Text>
+                <TouchableOpacity style={{ padding: 5 }} onPress={onPress.bind(this, query)}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>{titleButton}</Text>
                 </TouchableOpacity>
             </View>
         </View>
