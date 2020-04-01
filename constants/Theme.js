@@ -1,9 +1,8 @@
 export const color = {
     "white": "#fff",
     "primary": '#00bfff',
-    
-    
     "primary2": "#27c96d",
+    "primary3": "#9900FF",
     "backgrounddark": "#f3f5f7",
     "backgrounddark2": "#f2f2f2",
     "text": "#222222",

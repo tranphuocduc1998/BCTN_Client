@@ -6,34 +6,55 @@ import * as Speech from 'expo-speech';
 import { sendHttpRequest } from '../constants/Fetch';
 import { Container, Footer, FooterSound } from '../components/Container';
 import { color } from '../constants/Theme';
-import { BasicCard } from '../components/Card';
+import { AdviceCard, BMICard, CareCard, FoodCard } from '../components/Card';
 
 const Main = () => {
     const [valueText, setValueText] = useState('');
     const [speech, setSpeech] = useState(false);
     const [valueTextString, setValueTextString] = useState('');
     const [valueBasicCard, setValueBasicCard] = useState([]);
+    const [valueBMICard, setValueBMICard] = useState();
+    const [valueNutrition, setValueNutrition] = useState([]);
+    const [valueHealthFoods, setValueHealthFoods] = useState();
 
-    useEffect(() => {
-        sendHttpRequest('GET', 'http://192.168.25.104:3030/ai')
+    let queryAI = '';
+    let httpResquest = (method, url, data) => {
+        sendHttpRequest(method, url, data)
             .then(resJson => {
-                const { type, voice } = resJson;
+                setValueBasicCard([]);
+                setValueBMICard();
+                setValueNutrition([]);
+                setValueHealthFoods();
+                const { type, voice, Data } = resJson;
                 switch (type) {
                     case "basicCard":
-                        const { Data } = resJson;
-                        setValueTextString('');
+                        setValueTextString(voice);
                         setValueBasicCard(Data);
                         break;
                     case "textString":
-                        setValueBasicCard([]);
                         setValueTextString(voice);
                         break;
-
+                    case "BMI":
+                        setValueTextString(voice);
+                        setValueBMICard(Data);
+                        break;
+                    case "Nutrition":
+                        setValueTextString(voice);
+                        setValueNutrition(Data);
+                        break;
+                    case "HealthFoods":
+                        setValueTextString(voice);
+                        setValueHealthFoods(Data);
+                        break;
                     default:
                         break;
                 }
                 Speech.speak(voice);
             });
+    }
+
+    useEffect(() => {
+        httpResquest('GET', 'http://192.168.99.155:3030/ai');
     }, [])
 
     const onSpeechStart = Voice.onSpeechStart = (e) => {
@@ -58,29 +79,13 @@ const Main = () => {
 
     const onSpeechPartialResults = Voice.onSpeechPartialResults = (e) => {
         setValueText(e.value[0]);
+        queryAI = e.value[0];
     };
 
     const onSpeechEnd = Voice.onSpeechEnd = (e) => {
         setSpeech(false);
-        sendHttpRequest('POST', 'http://192.168.25.104:3030/ai/request', { query: valueText })
-            .then(resJson => {
-                const { type, voice } = resJson;
-                switch (type) {
-                    case "basicCard":
-                        const { basicCard } = resJson;
-                        setValueTextString('');
-                        setValueBasicCard(basicCard);
-                        break;
-                    case "textString":
-                        setValueBasicCard([]);
-                        setValueTextString(voice);
-                        break;
-
-                    default:
-                        break;
-                }
-                Speech.speak(voice);
-            });
+        console.log(queryAI);
+        httpResquest('POST', 'http://192.168.25.104:3030/ai/request', { query: queryAI })
     };
 
     const _startRecognizing = async () => {
@@ -100,11 +105,11 @@ const Main = () => {
         }
     };
 
-    let contentSpeech = <Footer onPress={_startRecognizing} color={color.accent} />
+    // let contentSpeech = <Footer onPress={_startRecognizing} color={color.accent} />
 
-    if (speech) {
-        contentSpeech = <FooterSound />
-    }
+    // if (speech) {
+    //     contentSpeech = <FooterSound />
+    // }
 
     return (
         <Container>
@@ -112,42 +117,36 @@ const Main = () => {
                 justifyContent: 'center',
                 shadowRadius: 6,
                 shadowOpacity: 0.5,
-                elevation: 10,
+                elevation: 50,
                 padding: 15,
-                backgroundColor: 'white',
+                backgroundColor: color.white,
             }}>
-                <Text style={{ fontSize: 20, color: '#000' }}>{valueText}</Text>
+                <Text style={{ fontSize: 20, color: '#000', paddingHorizontal: 10, borderBottomWidth: valueText ? 1 : 0, borderColor: color.primary }}>{valueText}</Text>
             </View>
-            <ScrollView style={{ backgroundColor: color.backgrounddark }}>
+            <ScrollView style={{ marginVertical: 10, }}>
+                {valueTextString ? <View style={{ marginVertical: 10, alignItems: 'center', justifyContent: 'center' }}><Text style={{
+                    fontSize: 20, color: '#000',
+                    width: '90%',
+                    fontWeight: '600',
+                    borderRadius: 20,
+                    backgroundColor: '#fff',
+                    padding: 10,
+                    shadowRadius: 10,
+                    shadowOpacity: 0.7,
+                    elevation: 4,
+                }}> {valueTextString} </Text></View> : <View></View>}
                 {valueBasicCard.map(result => {
-                    return <BasicCard key={result._id}
+                    return <AdviceCard key={result._id}
                         onPress={(query) => {
-                            sendHttpRequest('POST', 'http://192.168.25.104:3030/ai/request', { query: query })
-                                .then(resJson => {
-                                    const { type, voice } = resJson;
-                                    switch (type) {
-                                        case "basicCard":
-                                            const { basicCard } = resJson;
-                                            setValueTextString('');
-                                            setValueBasicCard(basicCard);
-                                            break;
-                                        case "textString":
-                                            const { textString } = resJson;
-                                            setValueBasicCard([]);
-                                            setValueTextString(textString);
-                                            break;
-
-                                        default:
-                                            break;
-                                    }
-                                    Speech.speak(voice);
-                                });
+                            httpResquest('POST', 'http://192.168.99.155:3030/ai/request', { query: query })
                         }}
                         data={result} />
                 })}
-                {valueTextString ? <View style={{ borderRadius: 20, marginLeft: 10, backgroundColor: '#fff', paddingHorizontal: 10 }}><Text style={{ fontSize: 20, color: '#000' }}> {valueTextString} </Text></View> : <View></View>}
+                {valueBMICard ? <BMICard data={valueBMICard} /> : <View></View>}
+                {valueNutrition ? <CareCard Data={valueNutrition} /> : <View></View>}
+                {valueHealthFoods ? <FoodCard data={valueHealthFoods} /> : <View></View>}
             </ScrollView>
-            {contentSpeech}
+            {speech ? <FooterSound /> : <Footer onPress={_startRecognizing} color={color.accent} />}
         </Container>
     );
 }
