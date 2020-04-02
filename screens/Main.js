@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Voice from '@react-native-community/voice';
 import * as Speech from 'expo-speech';
+import Geolocation from '@react-native-community/geolocation';
 
 import { sendHttpRequest } from '../constants/Fetch';
 import { Container, Footer, FooterSound } from '../components/Container';
 import { color } from '../constants/Theme';
 import { AdviceCard, BMICard, CareCard, FoodCard } from '../components/Card';
+import { GoogleMap } from '../components/GoogleMap';
 
 const Main = () => {
     const [valueText, setValueText] = useState('');
@@ -16,6 +18,7 @@ const Main = () => {
     const [valueBMICard, setValueBMICard] = useState();
     const [valueNutrition, setValueNutrition] = useState([]);
     const [valueHealthFoods, setValueHealthFoods] = useState();
+    const [valueGeolocation, setValueGeolocation] = useState();
 
     let queryAI = '';
     let httpResquest = (method, url, data) => {
@@ -25,6 +28,7 @@ const Main = () => {
                 setValueBMICard();
                 setValueNutrition([]);
                 setValueHealthFoods();
+                setValueGeolocation();
                 const { type, voice, Data } = resJson;
                 switch (type) {
                     case "basicCard":
@@ -46,6 +50,10 @@ const Main = () => {
                         setValueTextString(voice);
                         setValueHealthFoods(Data);
                         break;
+                    case "GoogleMap":
+                        setValueTextString(voice);
+                        Geolocation.getCurrentPosition(info => setValueGeolocation({ latitude: info.coords.latitude, longitude: info.coords.longitude }));
+                        break;
                     default:
                         break;
                 }
@@ -53,9 +61,10 @@ const Main = () => {
             });
     }
 
-    useEffect(() => {
-        httpResquest('GET', 'http://192.168.99.155:3030/ai');
-    }, [])
+    // useEffect(() => {
+    //     httpResquest('GET', 'http://192.168.99.155:3030/ai');
+    //     
+    // }, [])
 
     const onSpeechStart = Voice.onSpeechStart = (e) => {
 
@@ -138,13 +147,14 @@ const Main = () => {
                 {valueBasicCard.map(result => {
                     return <AdviceCard key={result._id}
                         onPress={(query) => {
-                            httpResquest('POST', 'http://192.168.99.155:3030/ai/request', { query: query })
+                            httpResquest('POST', 'http://192.168.25.104:3030/ai/request', { query: query })
                         }}
                         data={result} />
                 })}
                 {valueBMICard ? <BMICard data={valueBMICard} /> : <View></View>}
                 {valueNutrition ? <CareCard Data={valueNutrition} /> : <View></View>}
                 {valueHealthFoods ? <FoodCard data={valueHealthFoods} /> : <View></View>}
+                {valueGeolocation ? <GoogleMap geolocation={valueGeolocation} /> : <View></View>}
             </ScrollView>
             {speech ? <FooterSound /> : <Footer onPress={_startRecognizing} color={color.accent} />}
         </Container>
