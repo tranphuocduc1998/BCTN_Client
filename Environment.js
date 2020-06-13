@@ -1,5 +1,5 @@
 export const Environment = {
-    "localhost": '192.168.25.104:3030',
+    "localhost": '192.168.65.101:3030',
     "type": "service_account",
     "project_id": "api-ai-hnioee",
     "private_key_id": "09f6e6d340f9820b0958282f70590187d51ce77c",

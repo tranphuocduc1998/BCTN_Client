@@ -4,13 +4,27 @@ import Voice from "@react-native-community/voice";
 import * as Speech from "expo-speech";
 import Geolocation from "@react-native-community/geolocation";
 
-import { sendHttpRequest } from "../constants/Fetch";
+import { sendHttpRequest, localHost } from "../constants/Fetch";
 import { Container, Footer, FooterSound } from "../components/Container";
 import { color } from "../constants/Theme";
 import { AdviceCard, BMICard, CareCard, FoodCard } from "../components/Card";
 import { GoogleMap } from "../components/GoogleMap";
 
+
+
+
 const Main = () => {
+  var contextRN;
+  var healthCareRN = {
+    increaseKg: 0,
+    dropKg: 0,
+    height: 0,
+    weight: 0,
+  }
+
+  var ListHealthFoodsRN = [
+  ];
+
   const [valueText, setValueText] = useState("");
   const [speech, setSpeech] = useState(false);
   const [valueTextString, setValueTextString] = useState("");
@@ -30,7 +44,10 @@ const Main = () => {
       setValueHealthFoods();
       setValueGeolocation();
       setFoodStore();
-      const { type, voice, Data, foodStore } = resJson;
+      const { type, voice, Data, foodStore, context, healthCare, ListHealthFoods } = resJson;
+      contextRN = context;
+      healthCareRN = healthCare;
+      ListHealthFoodsRN = ListHealthFoods;
       switch (type) {
         case "basicCard":
           setValueTextString(voice);
@@ -68,21 +85,15 @@ const Main = () => {
     });
   };
 
-  useEffect(() => {
-    httpResquest("POST", "http://192.168.15.106:3030/ai/request", {
-      query: "Địa điểm ăn uống quanh đây",
-    });
-  }, []);
+  const onSpeechStart = (Voice.onSpeechStart = (e) => { });
 
-  const onSpeechStart = (Voice.onSpeechStart = (e) => {});
+  const onSpeechRecognized = (Voice.onSpeechRecognized = (e) => { });
 
-  const onSpeechRecognized = (Voice.onSpeechRecognized = (e) => {});
+  const onSpeechError = (Voice.onSpeechError = (e) => { });
 
-  const onSpeechError = (Voice.onSpeechError = (e) => {});
+  const onSpeechResults = (Voice.onSpeechResults = (e) => { });
 
-  const onSpeechResults = (Voice.onSpeechResults = (e) => {});
-
-  const onSpeechVolumeChanged = (Voice.onSpeechVolumeChanged = (e) => {});
+  const onSpeechVolumeChanged = (Voice.onSpeechVolumeChanged = (e) => { });
 
   const onSpeechPartialResults = (Voice.onSpeechPartialResults = (e) => {
     setValueText(e.value[0]);
@@ -92,8 +103,11 @@ const Main = () => {
   const onSpeechEnd = (Voice.onSpeechEnd = (e) => {
     setSpeech(false);
     console.log(queryAI);
-    httpResquest("POST", "http://172.20.10.2:3030/ai/request", {
+    httpResquest("POST", `${localHost}/ai/request`, {
       query: queryAI,
+      context: contextRN,
+      ListHealthFoods: ListHealthFoodsRN,
+      healthCare: healthCareRN
     });
   });
 
@@ -145,7 +159,7 @@ const Main = () => {
         </Text>
       </View>
       <ScrollView style={{ marginVertical: 10 }}>
-        {valueTextString && (
+        {valueTextString ? (
           <View
             style={{
               marginVertical: 10,
@@ -170,14 +184,19 @@ const Main = () => {
               {valueTextString}
             </Text>
           </View>
-        )}
+        ) : (
+            <View></View>
+          )}
         {valueBasicCard.map((result) => {
           return (
             <AdviceCard
               key={result._id}
               onPress={(query) => {
-                httpResquest("POST", "http://172.20.10.2:3030/ai/request", {
+                httpResquest("POST", `${localHost}/ai/request`, {
                   query: query,
+                  context: contextRN,
+                  ListHealthFoods: ListHealthFoodsRN,
+                  healthCare: healthCareRN
                 });
               }}
               data={result}
@@ -194,8 +213,8 @@ const Main = () => {
       {speech ? (
         <FooterSound />
       ) : (
-        <Footer onPress={_startRecognizing} color={color.accent} />
-      )}
+          <Footer onPress={_startRecognizing} color={color.accent} />
+        )}
     </Container>
   );
 };
