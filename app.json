@@ -3,7 +3,7 @@
   "displayName": "Nutrition manager",
   "expo": {
     "name": "mobileAndroid",
-    "slug": "mobileAndroid",
+    "slug": "Nutrition manager",
     "privacy": "unlisted",
     "sdkVersion": "36.0.0",
     "version": "1.0.0",

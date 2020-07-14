@@ -1,4 +1,4 @@
-export const localHost = "http://192.168.1.8:3030";
+export const localHost = "http://192.168.1.93:3030";
 
 //key openrouteservice 
 const api_Key = '5b3ce3597851110001cf624839aa6df4bcb34370a5459030e9990018';

@@ -10,9 +10,6 @@ import { color } from "../constants/Theme";
 import { AdviceCard, BMICard, CareCard, FoodCard } from "../components/Card";
 import { GoogleMap } from "../components/GoogleMap";
 
-
-
-
 const Main = () => {
   var contextRN;
   var healthCareRN = {
@@ -20,11 +17,9 @@ const Main = () => {
     dropKg: 0,
     height: 0,
     weight: 0,
-  }
+  };
 
-  var ListHealthFoodsRN = [
-  ];
-
+  var ListHealthFoodsRN = [];
   const [valueText, setValueText] = useState("");
   const [speech, setSpeech] = useState(false);
   const [valueTextString, setValueTextString] = useState("");
@@ -35,6 +30,11 @@ const Main = () => {
   const [valueGeolocation, setValueGeolocation] = useState();
   const [foodStore, setFoodStore] = useState();
 
+  useEffect(() => {
+    setValueTextString("Xin Chào!");
+    Speech.speak("Xin Chào!");
+  }, []);
+
   let queryAI = "";
   let httpResquest = (method, url, data) => {
     sendHttpRequest(method, url, data).then((resJson) => {
@@ -44,7 +44,15 @@ const Main = () => {
       setValueHealthFoods();
       setValueGeolocation();
       setFoodStore();
-      const { type, voice, Data, foodStore, context, healthCare, ListHealthFoods } = resJson;
+      const {
+        type,
+        voice,
+        Data,
+        foodStore,
+        context,
+        healthCare,
+        ListHealthFoods,
+      } = resJson;
       contextRN = context;
       healthCareRN = healthCare;
       ListHealthFoodsRN = ListHealthFoods;
@@ -85,15 +93,15 @@ const Main = () => {
     });
   };
 
-  const onSpeechStart = (Voice.onSpeechStart = (e) => { });
+  const onSpeechStart = (Voice.onSpeechStart = (e) => {});
 
-  const onSpeechRecognized = (Voice.onSpeechRecognized = (e) => { });
+  const onSpeechRecognized = (Voice.onSpeechRecognized = (e) => {});
 
-  const onSpeechError = (Voice.onSpeechError = (e) => { });
+  const onSpeechError = (Voice.onSpeechError = (e) => {});
 
-  const onSpeechResults = (Voice.onSpeechResults = (e) => { });
+  const onSpeechResults = (Voice.onSpeechResults = (e) => {});
 
-  const onSpeechVolumeChanged = (Voice.onSpeechVolumeChanged = (e) => { });
+  const onSpeechVolumeChanged = (Voice.onSpeechVolumeChanged = (e) => {});
 
   const onSpeechPartialResults = (Voice.onSpeechPartialResults = (e) => {
     setValueText(e.value[0]);
@@ -107,7 +115,7 @@ const Main = () => {
       query: queryAI,
       context: contextRN,
       ListHealthFoods: ListHealthFoodsRN,
-      healthCare: healthCareRN
+      healthCare: healthCareRN,
     });
   });
 
@@ -127,12 +135,6 @@ const Main = () => {
       console.error(e);
     }
   };
-
-  // let contentSpeech = <Footer onPress={_startRecognizing} color={color.accent} />
-
-  // if (speech) {
-  //     contentSpeech = <FooterSound />
-  // }
 
   return (
     <Container>
@@ -185,8 +187,8 @@ const Main = () => {
             </Text>
           </View>
         ) : (
-            <View></View>
-          )}
+          <View></View>
+        )}
         {valueBasicCard.map((result) => {
           return (
             <AdviceCard
@@ -196,7 +198,7 @@ const Main = () => {
                   query: query,
                   context: contextRN,
                   ListHealthFoods: ListHealthFoodsRN,
-                  healthCare: healthCareRN
+                  healthCare: healthCareRN,
                 });
               }}
               data={result}
@@ -211,10 +213,10 @@ const Main = () => {
         <GoogleMap geolocation={valueGeolocation} foodStore={foodStore} />
       )}
       {speech ? (
-        <FooterSound />
+        <FooterSound onPress={_stopRecognizing} />
       ) : (
-          <Footer onPress={_startRecognizing} color={color.accent} />
-        )}
+        <Footer onPress={_startRecognizing} color={color.accent} />
+      )}
     </Container>
   );
 };

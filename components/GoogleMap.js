@@ -12,6 +12,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 
 export function GoogleMap({ geolocation, foodStore }) {
@@ -166,6 +167,16 @@ export function GoogleMap({ geolocation, foodStore }) {
     );
   };
 
+  const _onGGMAPS = (e) => {
+    Speech.speak(`Thực hiện chỉ đường đến ${e.name}`);
+    let daddr = encodeURIComponent(`${e.latitude},${e.longitude}`);
+    if (Platform.OS === 'ios') {
+      Linking.openURL(`http://maps.apple.com/?daddr=${daddr}`);
+    } else {
+      Linking.openURL(`http://maps.google.com/?daddr=${daddr}`);
+    }
+  };
+
   return (
     <View style={{ ...StyleSheet.absoluteFillObject }}>
       <MapView
@@ -199,6 +210,9 @@ export function GoogleMap({ geolocation, foodStore }) {
               key={result._id}
               onPress={() => _onPressMarker(result)}
               title={result.name}
+              onCalloutPress={()=>{
+                _onGGMAPS(result);
+              }}
               coordinate={{
                 latitude: result.latitude,
                 longitude: result.longitude,
